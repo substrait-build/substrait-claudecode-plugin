@@ -255,7 +255,8 @@ echo "Backend stack: $STACK"
 
 # package DEST — zip the project root, source only. Prefers `zip`; on a stock Windows /
 # Git Bash machine (which has no `zip`) it stages a clean copy with `tar` — reusing the
-# same exclude list — and compresses it with PowerShell's Compress-Archive. Returns 2 when
+# same exclude list — and compresses it with make-zip.ps1 (a hand-rolled ZipArchive
+# builder, not Compress-Archive -- see that script's header for why). Returns 2 when
 # no packager is available so the caller can give an actionable error.
 package() {
   local dest="$1"
@@ -278,8 +279,9 @@ package() {
       --exclude='__pycache__' --exclude='*.pyc' --exclude='./dist' --exclude='*/dist' \
       --exclude='./build' --exclude='*/build' --exclude='./.substrait' --exclude='.DS_Store' . \
       | tar -xf - -C "$stage" || { rm -rf "$stage"; return 1; }
-    "$ps" -NoProfile -NonInteractive -Command \
-      "Compress-Archive -Path '$(cygpath -w "$stage")\\*' -DestinationPath '$(cygpath -w "$dest")' -Force" \
+    "$ps" -NoProfile -NonInteractive -ExecutionPolicy Bypass \
+      -File "$(cygpath -w "$(dirname "${BASH_SOURCE[0]}")/make-zip.ps1")" \
+      -SrcRoot "$(cygpath -w "$stage")" -DestZip "$(cygpath -w "$dest")" \
       || { rm -rf "$stage"; return 1; }
     rm -rf "$stage"
     return 0
@@ -303,10 +305,21 @@ if [ "$size" -gt "$max" ]; then
 fi
 echo "Packaged $((size/1024)) KB."
 
+# curl's `-F "file=@PATH"` needs a path *curl itself* can open. On a stock Windows
+# Git Bash install, `curl` resolves to the bundled native Windows build (mingw64
+# target), which can't read the POSIX-style path mktemp just gave us (e.g.
+# /tmp/substrait-XXXXXX.zip) -- it needs a Windows path. Convert when cygpath is
+# available (same dependency the PowerShell packaging fallback above already has);
+# elsewhere (Linux/macOS, or an MSYS-native curl) the path is already usable as-is.
+zip_path_for_curl="$zip_path"
+if command -v cygpath >/dev/null 2>&1; then
+  zip_path_for_curl="$(cygpath -w "$zip_path")"
+fi
+
 # 2. Deploy the token's app (the app is inferred server-side from the token).
 echo "Deploying…"
 substrait_call POST /api/deploy \
-  -F "file=@$zip_path;type=application/zip;filename=upload.zip" \
+  -F "file=@$zip_path_for_curl;type=application/zip;filename=upload.zip" \
   -F "backend_stack=$STACK" || exit $?
 case "${SUBSTRAIT_STATUS:-}" in
   200|201|202) : ;;
