@@ -150,6 +150,18 @@ until the preview is live.
 5. **Report the outcome:** the run number and, on success, the live preview URL. If the
    script reports a failure, surface the HTTP status / message and suggest checking the
    portal logs for that run — do not retry automatically.
+   After a successful deploy to a **non-production** environment (`dev`), `--watch` goes
+   on to wait (up to 10 minutes) for that deploy's Dev security scans and prints the
+   **Go-live verdict** — relay it as is:
+   - `✅ Dev is clean — ready to Go Live` — nothing blocks a promotion to production.
+   - `⚠ N still blocking — run /substrait:fix` — offer `/substrait:fix`, which reads the
+     blocking findings, fixes what it can and files false-positive claims with Infosec.
+   - `! <scans> didn't complete — retry them on the Security tab` — a scanner errored;
+     the retry is on the app's Security tab in the portal.
+   - `! <scans> still running — run /substrait:fix later` (or the scans haven't reported
+     yet) — the 10-minute wait ran out; nothing is wrong, the scans just aren't done.
+   The verdict is advisory: the deploy already succeeded and the script still exits 0 —
+   never report the deploy as failed because of it.
 
 Note: for zip deploys the script enforces the 16 MB source-only limit and excludes
 `node_modules/`, `.venv/`, `dist/`, build output and `.git/`. If it reports the zip is
@@ -187,6 +199,10 @@ and always sits behind sign-in for the organisation — it can never be made pub
   If the check does not clear — scans fail, a reviewer rejects — nothing is deployed and
   the promotion is blocked; fix the issue, deploy to `dev` again and promote again (a new
   check starts from Layer 1).
+  The promotion is **refused up front** (nothing is started) while Dev is not clean: Dev
+  still has blocking findings (the script then adds "Run /substrait:fix to resolve
+  them." — offer it), a Dev scan is still running (wait, then promote again), or a Dev
+  scan didn't complete (retry it on the Security tab). Relay the message as is.
   `bash "${CLAUDE_PLUGIN_ROOT}/scripts/substrait-deploy.sh" promote --to production`
   `bash "${CLAUDE_PLUGIN_ROOT}/scripts/substrait-deploy.sh" promotion` shows where it is (the
   check's layer, or why it was blocked). A review can take a while — tell the user, and

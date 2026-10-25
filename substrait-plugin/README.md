@@ -6,7 +6,7 @@ terminal. The plugin bundles:
 - the **`substrait-app`** skill — scaffolds a contract-compliant app (FastAPI `backend/`
   on port 8000, `cicd/` Dockerfiles, optional React+Vite+Tailwind `frontend/`, Flyway
   migrations); and
-- seven slash commands:
+- ten slash commands:
   - **`/substrait:init`** — initialize the current folder as a Substrait project: scaffold
     a new app in an empty folder, or audit and convert an existing codebase to the deploy
     contract — then link it to an app.
@@ -20,8 +20,15 @@ terminal. The plugin bundles:
     or a pushed-branch trigger for GitHub-connected apps (`--watch` to follow the build).
   - **`/substrait:env`** — view and set the linked app's environment variables and secrets
     (secrets are write-only; changes live-apply to a running app).
+  - **`/substrait:logs`** — read the linked app's runtime logs (backend or frontend pods)
+    to debug a deployed app that misbehaves.
+  - **`/substrait:fix`** — clear the app's Dev blocking security findings: fixes what it
+    can in the code, files false-positive claims with Infosec (only on your "y"), lists
+    what can't be fixed and any secrets to rotate, then offers to redeploy.
   - **`/substrait:library`** — browse the platform's API Library and design an app against
     existing APIs.
+  - **`/substrait:ping`** — a no-op that prints the installed plugin version (to confirm an
+    update took effect).
 
 ## Install
 
@@ -58,7 +65,10 @@ Two things that catch people out:
 1. In your project, run `/substrait:link`. It opens the portal in your browser (you're
    already logged in), where you **pick the app** to link — the deploy token is minted for
    that app and returned to the CLI automatically. The app must already exist.
-2. Run `/substrait:deploy` to ship (add `--watch` to follow the build to the live URL).
+2. Run `/substrait:deploy` to ship (add `--watch` to follow the build to the live URL; for a
+   `dev` deploy it then waits for the security scans and says whether the app is ready to
+   go live).
+3. Something blocking go-live? Run `/substrait:fix`.
 
 **Headless / CI?** If there's no browser, mint a token by hand: portal → your app → its
 **Deploy** tab → **Create deploy token**, copy the `sbd_…` value (shown once), then run
