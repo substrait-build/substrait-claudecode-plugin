@@ -32,8 +32,9 @@ terminal. The plugin bundles:
     what can't be fixed and any secrets to rotate, then offers to redeploy.
   - **`/substrait:library`** — browse the platform's API Library and design an app against
     existing APIs.
-  - **`/substrait:ping`** — a no-op that prints the installed plugin version (to confirm an
-    update took effect).
+  - **`/substrait:ping`** — prints the installed plugin version and checks each saved login
+    (read-only). If your Substrait installation has moved to a new address, this also
+    updates your saved logins to it.
 
 ## Install
 
