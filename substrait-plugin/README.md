@@ -6,7 +6,7 @@ terminal. The plugin bundles:
 - the **`substrait-app`** skill — scaffolds a contract-compliant app (FastAPI `backend/`
   on port 8000, `cicd/` Dockerfiles, optional React+Vite+Tailwind `frontend/`, Flyway
   migrations); and
-- eleven slash commands:
+- twelve slash commands:
   - **`/substrait:init`** — initialize the current folder as a Substrait project: scaffold
     a new app in an empty folder, or audit and convert an existing codebase to the deploy
     contract — then link it to an app.
@@ -32,6 +32,9 @@ terminal. The plugin bundles:
     what can't be fixed and any secrets to rotate, then offers to redeploy.
   - **`/substrait:library`** — browse the platform's API Library and design an app against
     existing APIs.
+  - **`/substrait:slate`** — create, change, pull and push back **slates** (AI-made
+    documents, decks and interactive pages): ask for one from a brief, ask it to change,
+    fetch its HTML to edit by hand, save it back as the next version, open it.
   - **`/substrait:ping`** — prints the installed plugin version and checks each saved login
     (read-only). If your Substrait installation has moved to a new address, this also
     updates your saved logins to it.
