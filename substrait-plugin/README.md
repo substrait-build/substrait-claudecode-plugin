@@ -36,7 +36,7 @@ terminal. The plugin bundles:
     documents, decks and interactive pages): ask for one from a brief, ask it to change,
     fetch its HTML to edit by hand, save it back as the next version, open it.
     The page is written by Substrait's AI (on your organisation's AI key) or right here by
-    Claude Code (on your own usage) — say which, or set the default with `mode`.
+    Claude Code (on your own usage) — whichever your organisation is set to; `mode` says which.
   - **`/substrait:ping`** — prints the installed plugin version and checks each saved login
     (read-only). If your Substrait installation has moved to a new address, this also
     updates your saved logins to it.
