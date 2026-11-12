@@ -34,7 +34,8 @@ terminal. The plugin bundles:
     existing APIs.
   - **`/substrait:slate`** — create, change, pull and push back **slates** (AI-made
     documents, decks and interactive pages): ask for one from a brief, ask it to change,
-    fetch its HTML to edit by hand, save it back as the next version, open it.
+    fetch its HTML to edit by hand, save it back as the next version, open it — and ask
+    a question about one (what it says, what a figure means) without changing it.
     The page is written by Substrait's AI (on your organisation's AI key) or right here by
     Claude Code (on your own usage) — whichever your organisation is set to; `mode` says which.
   - **`/substrait:ping`** — prints the installed plugin version and checks each saved login
