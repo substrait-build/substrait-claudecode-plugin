@@ -66,8 +66,8 @@ orchestrates.
    - Follow the `/substrait:link` flow: `… substrait-link.sh status`; establish the
      account link if missing (`account --portal-url <URL>` — the portal URL is
      REQUIRED, there is no default; ask the user for it, e.g.
-     `https://api.substrait.build` or a tenant URL like
-     `https://api.demo.substrait.build`). Then bind: for a brand-new app
+     `https://api.pluto.substrait.build` for the Substrait cloud, or the installation's
+     own API address such as `https://api.<installation>.substrait.build`). Then bind: for a brand-new app
      `… substrait-link.sh create --name "<NAME>"`; to deploy to an existing one,
      `… substrait-link.sh apps` and `… substrait-link.sh use --app <SLUG>`.
    - **GitHub-only workspaces:** where zip uploads are switched off, a new app must be
