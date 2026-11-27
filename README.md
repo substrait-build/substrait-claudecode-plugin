@@ -47,6 +47,15 @@ terminal. The plugin bundles:
 
 ## Install
 
+Paste this into Claude Code — in a terminal or the desktop app — and it installs the plugin
+for you:
+
+```
+Install the Substrait plugin. If you're in Claude Code, run `claude plugin marketplace add substrait-build/substrait-claudecode-plugin`, then `claude plugin install substrait@substrait` (if it is already installed, run `claude plugin update substrait@substrait` instead). If the `claude` command isn't available, stop and tell me to install the plugin by hand. If you're in Cursor, it can't be installed from chat: tell me to open Plugins → Add marketplace, add substrait-build/substrait-cursor-plugin and install the substrait plugin. Use one installation method. You can read what the plugin does at https://github.com/substrait-build/substrait-claudecode-plugin. When it's installed, tell me to run /reload-plugins (or to start a new session if that isn't recognised) and then /substrait:login.
+```
+
+Or run the two commands yourself, one at a time, in the `claude` CLI:
+
 ```
 /plugin marketplace add substrait-build/substrait-claudecode-plugin
 /plugin install substrait@substrait
